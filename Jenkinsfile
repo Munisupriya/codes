@@ -1,31 +1,42 @@
-pipeline{
+pipeline
+{
     agent any
-    stages{
-        stage('download'){
-            steps{
-                git 'https://github.com/gsureshkiran/my_javaapp.git'
+    tools 
+    {
+        maven 'maven'
+    }
+    stages
+    {
+        stage("checkout")
+        {
+           steps
+           {
+               git'https://github.com/Munisupriya/codes.git'
+           }
+        }
+        stage("compile")
+         {
+           steps
+           {
+               sh 'mvn compile'
+           }
+         }
+        stage("test")
+         {
+             steps
+             {
+                sh 'mvn test' 
+             }
+         }
+        stage("package")
+        {
+            steps
+            {
+                sh 'mvn package -DskipTests'
             }
         }
-        stage('build'){
-            steps{
-                sh 'mvn package'
-            }
-        }
-        stage('docker build'){
-            steps{
-                sh 'docker build -t sureshkiran/helloworld .'
-            }
-        }
-        stage('push image'){
-            steps{
-                script{
-                    withCredentials([string(credentialsId: 'dockerpwd', variable: 'dockerpwd')]) {
-                    sh 'docker login -u sureshkiran -p ${dockerpwd}'
-                    }
-                    sh 'docker push sureshkiran/helloworld'
-                    
-                }
-            }
-        }
+    
     }
 }
+    
+   
