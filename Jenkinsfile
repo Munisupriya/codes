@@ -35,6 +35,13 @@ pipeline
                 sh 'mvn package -DskipTests'
             }
         }
+        stage("image")
+        {
+            steps
+            {
+                sh 'docker build -t myfile .'
+            }
+        }
     
     }
 }
